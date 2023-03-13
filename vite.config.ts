@@ -12,9 +12,7 @@ export default defineConfig({
     vue(),
     vueJsx(),
     UnoCSS({
-      shortcuts: [
-        { logo: "i-logos-vue w-6em h-6em transform transition-800" },
-      ],
+      shortcuts: [{ logo: "i-logos-vue w-6em h-6em transform transition-800" }],
       presets: [
         presetUno(),
         presetAttributify(),
