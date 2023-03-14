@@ -5,15 +5,36 @@ import { createHtml } from "./print";
 export const App = defineComponent({
   name: "App",
   setup() {
+    const result = ref();
+    //图片全部加载完成后再打印
+    function getLoadPromise(iframe: HTMLIFrameElement) {
+      const imgList = iframe.contentWindow?.document.querySelectorAll("img");
+      if (!imgList) return Promise.resolve();
+      if (imgList.length === 0) {
+        return Promise.resolve();
+      }
+      let finishedCount = 0;
+      return new Promise<void>((resolve) => {
+        function check() {
+          finishedCount++;
+          if (finishedCount === imgList!.length) {
+            resolve();
+          }
+        }
+        imgList.forEach((img) => {
+          img.addEventListener("load", check);
+          img.addEventListener("error", check);
+        });
+      });
+    }
     const printLabel = async () => {
-      const result = await createHtml();
-      if (!result) return;
+      result.value = await createHtml();
+      if (!result.value) return;
       const iframe = document.createElement("iframe");
       iframe.style.display = "none";
       document.body.appendChild(iframe);
-      iframe.contentWindow?.document.write(result);
-      iframe.contentWindow?.document.close();
-      iframe.contentWindow?.focus();
+      iframe.contentWindow?.document.write(result.value);
+      await getLoadPromise(iframe);
       iframe.contentWindow?.print();
       document.body.removeChild(iframe);
     };
