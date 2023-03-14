@@ -1,8 +1,7 @@
 import { compile } from "handlebars";
-import { apiData } from "./apiData";
 import { toDataURL } from "qrcode";
 
-type RenderData = {
+export type RenderData = {
   labelType: 1 | 2 | 3 | 4;
   labelHeight: number;
   labelWidth: number;
@@ -15,9 +14,21 @@ type LabelData = {
   qrCode: string;
   fieldList: { fieldName: string; fieldValue: string }[];
 };
+export type GenerateParams = {
+  assetLabel: {
+    labelHeight: number;
+    labelWidth: number;
+    fontSize: number;
+    labelType: 1 | 2 | 3 | 4;
+  };
+  assetInfoList: [];
+  logoUrl: string;
+};
 
-async function generatePrintList(): Promise<RenderData | null> {
-  const { assetLabel, assetInfoList, logoUrl } = apiData;
+export async function generatePrintList(
+  params: GenerateParams
+): Promise<RenderData | null> {
+  const { assetLabel, assetInfoList, logoUrl } = params;
   if (assetInfoList.length === 0) return null;
   const { labelHeight, labelWidth, fontSize, labelType } = assetLabel;
   const labelList = (await createLabelList(
@@ -271,9 +282,7 @@ const labelThree = `
   </body>
 </html>
 `;
-
-export const createHtml = async () => {
-  const data = await generatePrintList();
+export const createHtml = async (data: RenderData | null) => {
   if (!data) return;
   function getLabelStrByType(type: number) {
     switch (type) {
