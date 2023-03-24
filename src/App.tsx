@@ -79,7 +79,7 @@ export const App = defineComponent({
       <main>
         <img src={imgUrl} />
         <p>请使用Chrome浏览器，以获得最佳打印效果</p>
-        <iframe srcdoc={result.value}></iframe>
+        {/* <iframe srcdoc={result.value}></iframe> */}
         <div class="mt-4">
           {disabled.value === 0 ? (
             <button disabled class="cursor-not-allowed">

@@ -1,7 +1,7 @@
 import Handlebars from "handlebars"
 
 //判断两个值是否相等
-Handlebars.registerHelper("if_eq", function (a, b, opts) {
+Handlebars.registerHelper("if_eq", function (this: any, a, b, opts) {
   if (a == b) {
     return opts.fn(this);
   } else {
@@ -82,8 +82,6 @@ async function generateCustom(params: GenerateParams) {
       else if (block.type === 'logo') {
         block.fieldValue = logoUrl
       } else {
-        console.log(block.fieldName)
-        console.log(item.assetLabelFieldList)
         item.assetLabelFieldList.forEach((field: any) => {
           if (field.fieldName === block.fieldName) {
             block.fieldValue = field.fieldValue
@@ -428,7 +426,7 @@ const customLabel = `
               left:{{left}}px;
               font-weight:{{fontWeight}};
               font-size:{{fontSize}}px;">
-              {{fieldValue}}
+              {{content}}
             </span>
           {{/if_eq}}
           {{#if_eq type 'logo'}}
